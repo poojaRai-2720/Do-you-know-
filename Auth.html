@@ -1,0 +1,694 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Do you know?</title>
+
+<style>
+:root{
+ --bg:#fffaff;
+ --card:#ffffff;
+ --text:#292943;
+ --muted:#8989a6;
+ --pink:#f49ac2;
+ --blue:#6d9cff;
+ --purple:#a99af5;
+ --border:#eeeafa;
+ --input:#f9f7ff;
+}
+body.dark{
+ --bg:#111326;
+ --card:#1d2039;
+ --text:#f5f2ff;
+ --muted:#aaaac8;
+ --pink:#ff91c9;
+ --blue:#60b8ff;
+ --purple:#b5a2ff;
+ --border:#343650;
+ --input:#292c49;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ background:
+ radial-gradient(circle at 10% 10%,#f8ddec 0,transparent 30%),
+ radial-gradient(circle at 90% 90%,#dceaff 0,transparent 30%),
+ var(--bg);
+ color:var(--text);
+ font-family:'Segoe UI',Arial,sans-serif;
+ transition:.3s;
+}
+body.dark{
+ background:
+ radial-gradient(circle at 10% 10%,#302448 0,transparent 35%),
+ radial-gradient(circle at 90% 90%,#173c60 0,transparent 35%),
+ var(--bg);
+}
+.theme{
+ position:fixed;top:20px;right:20px;
+ width:45px;height:45px;border:1px solid var(--border);
+ border-radius:50%;background:var(--card);
+ color:var(--text);font-size:20px;cursor:pointer;
+}
+.container{
+ width:100%;max-width:440px;
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:27px;
+ padding:32px;
+ box-shadow:0 15px 55px rgba(95,75,150,.13);
+}
+.robot{
+ text-align:center;font-size:65px;margin-bottom:8px;
+ animation:float 3s ease-in-out infinite;
+}
+@keyframes float{
+ 0%,100%{transform:translateY(0)}
+ 50%{transform:translateY(-8px)}
+}
+.logo{
+ text-align:center;font-size:27px;
+ font-weight:850;color:var(--pink);
+ letter-spacing:-1px;
+}
+.logo span{color:var(--blue)}
+.subtitle{
+ text-align:center;color:var(--muted);
+ font-size:14px;line-height:1.6;margin:9px 0 23px;
+}
+.tabs{
+ display:flex;background:var(--input);
+ padding:5px;border-radius:15px;margin-bottom:22px;
+}
+.tab{
+ flex:1;border:0;background:transparent;
+ padding:11px;border-radius:12px;
+ color:var(--muted);font-weight:700;cursor:pointer;
+}
+.tab.active{
+ background:var(--card);color:var(--blue);
+ box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+.field-label{
+ display:block;font-size:13px;font-weight:700;
+ margin:12px 0 7px;
+}
+.input-wrap{position:relative}
+.field{
+ width:100%;padding:14px;
+ border:1px solid var(--border);
+ background:var(--input);color:var(--text);
+ border-radius:13px;outline:none;font-size:14px;
+}
+.field:focus{border-color:var(--blue)}
+.password-toggle{
+ position:absolute;right:13px;top:50%;
+ transform:translateY(-50%);
+ border:0;background:none;color:var(--muted);
+ cursor:pointer;
+}
+.forgot{
+ text-align:right;margin:10px 0 17px;
+ font-size:12px;
+}
+a{color:var(--blue);text-decoration:none;cursor:pointer}
+.primary{
+ width:100%;padding:14px;border:0;
+ border-radius:14px;background:linear-gradient(110deg,var(--blue),var(--purple));
+ color:white;font-weight:800;font-size:15px;
+ cursor:pointer;box-shadow:0 5px 15px rgba(109,156,255,.2);
+}
+.primary:disabled{opacity:.6;cursor:wait}
+.or{
+ display:flex;align-items:center;gap:12px;
+ color:var(--muted);font-size:12px;margin:20px 0;
+}
+.or:before,.or:after{
+ content:"";height:1px;background:var(--border);flex:1;
+}
+.social{
+ width:100%;padding:12px;margin:5px 0;
+ border:1px solid var(--border);
+ background:var(--card);color:var(--text);
+ border-radius:13px;font-weight:650;
+ cursor:pointer;display:flex;align-items:center;
+ justify-content:center;gap:12px;
+ transition:.2s;
+}
+.social:hover{background:var(--input);transform:translateY(-1px)}
+.social-icon{font-size:19px;font-weight:900}
+.google{color:#4285F4}
+.facebook{color:#1877F2}
+.linkedin{color:#0A66C2}
+.message{
+ margin:13px 0 0;text-align:center;
+ font-size:13px;line-height:1.5;min-height:20px;
+}
+.message.error{color:#ed6682}
+.message.success{color:#37ae87}
+.bottom{
+ text-align:center;font-size:13px;
+ color:var(--muted);margin-top:20px;
+}
+.back{
+ display:block;text-align:center;margin-top:20px;
+ font-size:13px;color:var(--muted);
+}
+.small{
+ font-size:11px;color:var(--muted);
+ line-height:1.5;text-align:center;margin-top:18px;
+}
+@media(max-width:480px){
+ .container{padding:24px 19px}
+}
+</style>
+</head>
+
+<body>
+
+<button class="theme" id="themeButton"
+ onclick="toggleTheme()">🌙</button>
+
+<div class="container">
+
+ <div class="robot">🤖💗</div>
+
+ <div class="logo">Do you <span>know?</span> ✨</div>
+
+ <p class="subtitle" id="subtitle">
+ Welcome back, little reader!
+ Your story universe is waiting.
+ </p>
+
+ <div class="tabs">
+  <button class="tab active" id="loginTab"
+   onclick="showMode('login')">Log in</button>
+  <button class="tab" id="signupTab"
+   onclick="showMode('signup')">Sign up</button>
+ </div>
+
+ <form id="authForm">
+
+  <div id="nameGroup" style="display:none">
+   <label class="field-label" for="name">Your name</label>
+   <input class="field" id="name" type="text"
+    placeholder="Enter your name" autocomplete="name">
+  </div>
+
+  <label class="field-label" for="email">Email address</label>
+  <input class="field" id="email" type="email"
+   placeholder="reader@example.com"
+   autocomplete="email" required>
+
+  <label class="field-label" for="password">Password</label>
+  <div class="input-wrap">
+   <input class="field" id="password" type="password"
+    placeholder="Enter your password"
+    minlength="6" autocomplete="current-password" required>
+   <button class="password-toggle" type="button"
+    onclick="togglePassword()">👁</button>
+  </div>
+
+  <div id="confirmGroup" style="display:none">
+   <label class="field-label" for="confirmPassword">
+    Confirm password
+   </label>
+   <input class="field" id="confirmPassword" type="password"
+    placeholder="Enter password again" minlength="6">
+  </div>
+
+  <div class="forgot" id="forgot">
+   <a onclick="resetPassword()">Forgot password?</a>
+  </div>
+
+  <button class="primary" id="submitButton" type="submit">
+   Log in ✨
+  </button>
+
+ </form>
+
+ <div class="message" id="message" role="status"
+  aria-live="polite"></div>
+
+ <div class="or">OR CONTINUE WITH</div>
+
+ <button class="social" onclick="socialLogin('google')">
+  <span class="social-icon google">G</span>
+  Continue with Google
+ </button>
+
+ <button class="social" onclick="socialLogin('facebook')">
+  <span class="social-icon facebook">f</span>
+  Continue with Facebook
+ </button>
+
+ <button class="social" onclick="socialLogin('linkedin')">
+  <span class="social-icon linkedin">in</span>
+  Continue with LinkedIn
+ </button>
+
+ <div class="bottom" id="bottomText">
+  New to our library?
+  <a onclick="showMode('signup')">Create an account</a>
+ </div>
+
+ <a class="back" href="index.html">← Back to homepage</a>
+
+ <p class="small">
+  By continuing, you agree to use Do you know? responsibly.
+  Your account is protected by Firebase Authentication.
+ </p>
+
+</div>
+
+<script type="module">
+
+// ============================================
+// 1. FIREBASE IMPORTS
+// ============================================
+
+import { initializeApp }
+ from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+import {
+ getAuth,
+ createUserWithEmailAndPassword,
+ signInWithEmailAndPassword,
+ GoogleAuthProvider,
+ FacebookAuthProvider,
+ OAuthProvider,
+ signInWithRedirect,
+ getRedirectResult,
+ onAuthStateChanged,
+ sendEmailVerification,
+ sendPasswordResetEmail,
+ updateProfile,
+ signOut
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+
+// ============================================
+// 2. YOUR FIREBASE CONFIGURATION
+// REPLACE THESE VALUES WITH YOUR OWN
+// ============================================
+
+const firebaseConfig = {
+ apiKey: "YOUR_API_KEY",
+ authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+ projectId: "YOUR_PROJECT_ID",
+ storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+ messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+ appId: "YOUR_APP_ID"
+};
+
+
+// ============================================
+// 3. INITIALIZE FIREBASE
+// ============================================
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+
+// ============================================
+// 4. SETTINGS
+// ============================================
+
+const HOME_PAGE = "index.html";
+
+// Set true if users must verify email before
+// entering the library.
+const REQUIRE_EMAIL_VERIFICATION = false;
+
+let currentMode = "login";
+
+const $ = id => document.getElementById(id);
+
+function showMessage(text,type="error"){
+ const box=$("message");
+ box.textContent=text;
+ box.className="message "+type;
+}
+
+function clearMessage(){
+ showMessage("");
+}
+
+function setLoading(loading){
+ $("submitButton").disabled=loading;
+ $("submitButton").textContent=
+  loading?"Please wait...":
+  currentMode==="signup"?"Create account 💗":"Log in ✨";
+}
+
+function friendlyError(error){
+ const errors={
+  "auth/email-already-in-use":"This email is already registered. Please log in.",
+  "auth/invalid-email":"Please enter a valid email address.",
+  "auth/weak-password":"Your password must be at least 6 characters.",
+  "auth/invalid-credential":"Incorrect email or password.",
+  "auth/user-not-found":"No account found with this email.",
+  "auth/wrong-password":"Incorrect password.",
+  "auth/popup-closed-by-user":"Sign-in was cancelled.",
+  "auth/account-exists-with-different-credential":
+   "An account already exists with this email using another sign-in method.",
+  "auth/unauthorized-domain":
+   "This website domain is not authorized in Firebase.",
+  "auth/operation-not-allowed":
+   "This sign-in provider is not enabled in Firebase.",
+  "auth/network-request-failed":
+   "Network error. Please check your internet connection.",
+  "auth/too-many-requests":
+   "Too many attempts. Please try again later.",
+  "auth/invalid-action-code":
+   "This verification or reset link is invalid or expired."
+ };
+
+ return errors[error.code] ||
+  error.message ||
+  "Something went wrong. Please try again.";
+}
+
+
+// ============================================
+// 5. LOGIN / SIGNUP SWITCH
+// ============================================
+
+window.showMode = function(mode){
+
+ currentMode=mode;
+ const signup=mode==="signup";
+
+ $("loginTab").classList.toggle("active",!signup);
+ $("signupTab").classList.toggle("active",signup);
+
+ $("nameGroup").style.display=signup?"block":"none";
+ $("confirmGroup").style.display=signup?"block":"none";
+ $("forgot").style.display=signup?"none":"block";
+
+ $("name").required=signup;
+ $("confirmPassword").required=signup;
+
+ $("subtitle").textContent=signup?
+  "Create your account and discover a world of stories!":
+  "Welcome back, little reader! Your story universe is waiting.";
+
+ $("bottomText").innerHTML=signup?
+  'Already have an account? <a id="switchLogin">Log in</a>':
+  'New to our library? <a id="switchSignup">Create an account</a>';
+
+ if(signup){
+  $("switchLogin").onclick=()=>showMode("login");
+ }else{
+  $("switchSignup").onclick=()=>showMode("signup");
+ }
+
+ $("password").autocomplete=
+  signup?"new-password":"current-password";
+
+ $("submitButton").textContent=
+  signup?"Create account 💗":"Log in ✨";
+
+ $("confirmPassword").value="";
+ clearMessage();
+};
+
+
+// ============================================
+// 6. EMAIL/PASSWORD AUTHENTICATION
+// ============================================
+
+$("authForm").addEventListener("submit",async event=>{
+
+ event.preventDefault();
+ clearMessage();
+
+ const email=$("email").value.trim();
+ const password=$("password").value;
+
+ setLoading(true);
+
+ try{
+
+  if(currentMode==="signup"){
+
+   const name=$("name").value.trim();
+   const confirm=$("confirmPassword").value;
+
+   if(!name){
+    throw new Error("Please enter your name.");
+   }
+
+   if(password!==confirm){
+    throw new Error("Passwords do not match.");
+   }
+
+   if(password.length<6){
+    throw new Error("Password must contain at least 6 characters.");
+   }
+
+   const result=await createUserWithEmailAndPassword(
+    auth,email,password
+   );
+
+   await updateProfile(result.user,{
+    displayName:name
+   });
+
+   try{
+    await sendEmailVerification(result.user);
+    showMessage(
+     "Account created! A verification email has been sent. 💗",
+     "success"
+    );
+   }catch(error){
+    showMessage(
+     "Account created, but verification email could not be sent: "+
+     friendlyError(error),
+     "error"
+    );
+   }
+
+   if(REQUIRE_EMAIL_VERIFICATION){
+    await signOut(auth);
+    return;
+   }
+
+   setTimeout(()=>goHome(),1200);
+
+  }else{
+
+   const result=await signInWithEmailAndPassword(
+    auth,email,password
+   );
+
+   if(REQUIRE_EMAIL_VERIFICATION&&
+      !result.user.emailVerified){
+
+    await sendEmailVerification(result.user);
+    await signOut(auth);
+
+    showMessage(
+     "Please verify your email. A new verification link has been sent.",
+     "error"
+    );
+    return;
+   }
+
+   showMessage("Welcome back! Opening your library... 💗","success");
+   setTimeout(()=>goHome(),700);
+  }
+
+ }catch(error){
+  showMessage(friendlyError(error),"error");
+ }finally{
+  setLoading(false);
+ }
+
+});
+
+
+// ============================================
+// 7. GOOGLE / FACEBOOK / LINKEDIN
+// ============================================
+
+window.socialLogin=async function(providerName){
+
+ clearMessage();
+
+ let provider;
+
+ try{
+
+  if(providerName==="google"){
+   provider=new GoogleAuthProvider();
+   provider.setCustomParameters({
+    prompt:"select_account"
+   });
+  }
+
+  else if(providerName==="facebook"){
+   provider=new FacebookAuthProvider();
+   provider.addScope("email");
+  }
+
+  else if(providerName==="linkedin"){
+   // Configure this exact provider ID
+   // in Firebase Identity Platform first.
+   provider=new OAuthProvider("oidc.linkedin");
+   provider.addScope("openid");
+   provider.addScope("profile");
+   provider.addScope("email");
+  }
+
+  if(!provider){
+   throw new Error("Unknown sign-in provider.");
+  }
+
+  // Redirect is generally preferable for mobile browsers.
+  await signInWithRedirect(auth,provider);
+
+ }catch(error){
+  showMessage(friendlyError(error),"error");
+ }
+
+};
+
+
+// ============================================
+// 8. HANDLE SOCIAL LOGIN REDIRECT RESULT
+// ============================================
+
+try{
+
+ const result=await getRedirectResult(auth);
+
+ if(result){
+  showMessage(
+   "Successfully signed in! Welcome to your library. 💗",
+   "success"
+  );
+  setTimeout(()=>goHome(),800);
+ }
+
+}catch(error){
+ showMessage(friendlyError(error),"error");
+}
+
+
+// ============================================
+// 9. FORGOT PASSWORD
+// ============================================
+
+window.resetPassword=async function(){
+
+ const email=$("email").value.trim();
+
+ if(!email){
+  showMessage("Enter your email address first.","error");
+  $("email").focus();
+  return;
+ }
+
+ try{
+
+  await sendPasswordResetEmail(auth,email);
+
+  showMessage(
+   "Password reset link sent! Please check your email. 💗",
+   "success"
+  );
+
+ }catch(error){
+  showMessage(friendlyError(error),"error");
+ }
+
+};
+
+
+// ============================================
+// 10. PASSWORD VISIBILITY
+// ============================================
+
+window.togglePassword=function(){
+
+ const field=$("password");
+
+ field.type=field.type==="password"?"text":"password";
+
+};
+
+
+// ============================================
+// 11. AUTH STATE LISTENER
+// ============================================
+
+onAuthStateChanged(auth,user=>{
+
+ if(user){
+  console.log("Authenticated user:",user.uid);
+  console.log("Email:",user.email);
+  console.log("Name:",user.displayName);
+ }else{
+  console.log("No user currently signed in.");
+ }
+
+});
+
+
+// ============================================
+// 12. REDIRECT TO HOMEPAGE
+// ============================================
+
+function goHome(){
+ window.location.replace(HOME_PAGE);
+}
+
+
+// ============================================
+// 13. LOGOUT FUNCTION
+// ============================================
+
+window.logoutUser=async function(){
+
+ try{
+  await signOut(auth);
+  window.location.replace("auth.html");
+ }catch(error){
+  showMessage(friendlyError(error),"error");
+ }
+
+};
+
+
+// ============================================
+// 14. THEME SWITCHER
+// ============================================
+
+window.toggleTheme=function(){
+
+ document.body.classList.toggle("dark");
+
+ const dark=document.body.classList.contains("dark");
+
+ localStorage.setItem("dykAuthTheme",dark?"dark":"light");
+
+ $("themeButton").textContent=dark?"☀️":"🌙";
+
+};
+
+if(localStorage.getItem("dykAuthTheme")==="dark"){
+ document.body.classList.add("dark");
+ $("themeButton").textContent="☀️";
+}
+
+</script>
+</body>
+</html>
